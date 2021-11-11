@@ -25,7 +25,7 @@ node{
      }
      stage ("Deploy Tomcat") {
         sshagent(['santu-dev']) {
-            sh "scp -o StrictHostKeyChecking=no target/*SNAPSHOT.jar santu@192.168.130.191:/opt/apps/tomcat8/"
+            sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/sonar-project/pipeline-git-mvn/target/target/*SNAPSHOT.jar santu@192.168.130.191:/opt/apps/tomcat8/"
             }
       }
         
