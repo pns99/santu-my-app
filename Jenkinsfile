@@ -1,13 +1,10 @@
-pipeline{
-    agent any
-    triggers {
-      pollSCM '* * * * *'
+node {
+    stage ("SCM Checkout") {
+	 	   git 'https://github.com/pns99/santu-my-app.git'
     }
-    stages{
-        stage("SCM"){
-            steps{
-               echo "job ran.....again and again"
-            }
-        }
+    stage ("Compile-package") {
+	    //mvntest
+	//def mvnHOME = tool name: 'mymaven', type: 'maven'
+        sh "/opt/maven/bin/mvn package"
     }
 }
