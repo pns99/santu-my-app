@@ -1,0 +1,16 @@
+node {
+    stage ("SCM Checkout") {
+	 	   git 'https://github.com/pns99/santu-my-app.git'
+    }
+    stage ("Compile-package") {
+	    //mvntest
+	//def mvnHOME = tool name: 'mymaven', type: 'maven'
+        sh "/opt/maven/bin/mvn package"
+    }
+    stage ("Deploy Tomcat") {
+        sshagent(['santu-dev']) {
+            sh "scp -o StrictHostKeyChecking=no traget/*SNAPSHOT.jar santu@192.168.130.191:/opt/apps/tomcat8/"
+            }
+      }
+        
+}
