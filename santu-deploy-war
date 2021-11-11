@@ -1,13 +1,29 @@
-node {
-    stage ("SCM Checkout") {
-	 	   git 'https://github.com/pns99/santu-my-app.git'
+node{
+   stage('SCM Checkout'){
+     git 'https://github.com/pns99/santu-sonar.git'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      //def mvnHome =  tool name: 'maven-3', type: 'maven'   
+      sh "/opt/maven/bin/mvn package"
+   }
+   
+   stage('SonarQube Analysis') {
+        //def mvnHome =  tool name: 'maven-3', type: 'maven'
+        withSonarQubeEnv('santusonar') { 
+          sh "/opt/maven/bin/mvn sonar:sonar"
+        }
     }
-    stage ("Compile-package") {
-	    //mvntest
-	//def mvnHOME = tool name: 'mymaven', type: 'maven'
-        sh "/opt/maven/bin/mvn package"
-    }
-    stage ("Deploy Tomcat") {
+    stage("Quality Gate") {
+          timeout(time: 1, unit: 'HOURS') {
+              def gg = waitForQualityGate()
+              if  (gg.status != 'OK') {
+                  error " Pipeline aborted due to quality check: ${qq.status}"
+              }
+          }
+          
+     }
+         stage ("Deploy Tomcat") {
         sshagent(['santu-dev']) {
             sh "scp -o StrictHostKeyChecking=no traget/*SNAPSHOT.jar santu@192.168.130.191:/opt/apps/tomcat8/"
             }
