@@ -1,4 +1,4 @@
-node{
+node("santunode01") {
    stage('SCM Checkout'){
      git 'https://github.com/pns99/santu-sonar.git'
    }
