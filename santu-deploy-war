@@ -5,13 +5,13 @@ node("santunode01") {
    stage('Compile-Package'){
       // Get maven home path
       //def mvnHome =  tool name: 'maven-3', type: 'maven'   
-      sh "/opt/maven/bin/mvn package"
+      sh "/opt/apps/maven/bin/mvn package"
    }
    
    stage('SonarQube Analysis') {
         //def mvnHome =  tool name: 'maven-3', type: 'maven'
         withSonarQubeEnv('santusonar') { 
-          sh "/opt/maven/bin/mvn sonar:sonar"
+          sh "/opt/apps/maven/bin/mvn sonar:sonar"
         }
     }
     stage("Quality Gate") {
